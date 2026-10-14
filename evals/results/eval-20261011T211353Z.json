@@ -1,0 +1,923 @@
+{
+  "run_id": "eval-20261011T211353Z",
+  "started_at": "2026-10-11T21:13:53.031Z",
+  "seconds": {
+    "seed": 287.9,
+    "run": 279.2
+  },
+  "provider_model": "claude-cli:claude-sonnet-5-5",
+  "cases_expected": 18,
+  "cases": 18,
+  "message_accuracy": 1.0,
+  "message_quality": 4.0,
+  "judge_failures": 0,
+  "by_failure_code": {
+    "account_closed": {
+      "cases": 3,
+      "message_accuracy": 1.0,
+      "message_quality": 4.666666666666667,
+      "judge_failures": 0
+    },
+    "debit_not_authorized": {
+      "cases": 3,
+      "message_accuracy": 1.0,
+      "message_quality": 3.6666666666666665,
+      "judge_failures": 0
+    },
+    "declined": {
+      "cases": 3,
+      "message_accuracy": 1.0,
+      "message_quality": 4.0,
+      "judge_failures": 0
+    },
+    "insufficient_funds": {
+      "cases": 3,
+      "message_accuracy": 1.0,
+      "message_quality": 3.6666666666666665,
+      "judge_failures": 0
+    },
+    "invalid_currency": {
+      "cases": 3,
+      "message_accuracy": 1.0,
+      "message_quality": 4.0,
+      "judge_failures": 0
+    },
+    "no_account": {
+      "cases": 3,
+      "message_accuracy": 1.0,
+      "message_quality": 4.0,
+      "judge_failures": 0
+    }
+  },
+  "criteria": {
+    "1_paid_retry_on_fixable_cases": {
+      "fixable_cases_expected": 6,
+      "fixable_cases": 6,
+      "paid": 6,
+      "auto_resolution_rate": 1.0,
+      "met": true
+    },
+    "2_escalation_of_other_cases": {
+      "other_cases": 12,
+      "escalated_with_an_accurate_note": 12,
+      "met": true
+    },
+    "3_seconds_from_first_step_to_paid": {
+      "limit": 120,
+      "paid_cases": 6,
+      "median": 9.3,
+      "max": 9.7,
+      "met": true,
+      "note": "First step to paid, from steps.created_at, without the time from the model draft to the approval. That time is the wait for people; the seller fix is inside it and has no step of its own. The run polls Stripe once a second."
+    }
+  },
+  "events": "polled",
+  "seller_fix": "simulated",
+  "approval": "simulated",
+  "paths": {
+    "accounts": {
+      "account_closed": {
+        "account_id": "acct_example_002",
+        "name": "Juniper Candle Co.",
+        "account": "created",
+        "funding": "funded"
+      },
+      "no_account": {
+        "account_id": "acct_example_003",
+        "name": "Harbor Street Prints",
+        "account": "created",
+        "funding": "funded"
+      },
+      "invalid_currency": {
+        "account_id": "acct_example_004",
+        "name": "Larkspur Ceramics",
+        "account": "created",
+        "funding": "funded"
+      },
+      "insufficient_funds": {
+        "account_id": "acct_example_005",
+        "name": "Copper Kettle Coffee",
+        "account": "created",
+        "funding": "funded"
+      },
+      "debit_not_authorized": {
+        "account_id": "acct_example_006",
+        "name": "Northwind Bike Repair",
+        "account": "created",
+        "funding": "funded"
+      },
+      "declined": {
+        "account_id": "acct_example_007",
+        "name": "Saltmarsh Soap Works",
+        "account": "created",
+        "funding": "funded"
+      }
+    },
+    "fallbacks": [],
+    "unknown_code": "the test debit card 4000056655665572, on Stripe"
+  },
+  "model_calls": 36,
+  "cost_usd": 1.1616,
+  "cost_is_estimate": true,
+  "case_rows": [
+    {
+      "kind": "account_closed",
+      "seller": "Juniper Candle Co.",
+      "account_id": "acct_example_002",
+      "payout_id": "po_example_017",
+      "failure_code": "account_closed",
+      "status": "paid",
+      "retry_payout_id": "po_example_035",
+      "seconds_to_paid": 9.347,
+      "error": null,
+      "draft_kind": "seller_message",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['closed'])."
+        },
+        {
+          "name": "seller_action",
+          "passed": true,
+          "reason": "The message asks for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        }
+      ],
+      "quality": 5,
+      "quality_reasoning": "The message states what failed, why, and the one action needed in short, plain, polite sentences with a calm tone.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "Hello Juniper Candle Co.,\n\nYour payout of 10.00 USD to your bank account ending in 1113 at STRIPE TEST BANK failed. The reason is that the bank account has been closed.\n\nPlease send us new bank account details.\n\nThank you."
+    },
+    {
+      "kind": "no_account",
+      "seller": "Harbor Street Prints",
+      "account_id": "acct_example_003",
+      "payout_id": "po_example_018",
+      "failure_code": "no_account",
+      "status": "paid",
+      "retry_payout_id": "po_example_036",
+      "seconds_to_paid": 9.745,
+      "error": null,
+      "draft_kind": "seller_message",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['incorrect', 'be located', 'not found', 'does not exist', 'no bank account'])."
+        },
+        {
+          "name": "seller_action",
+          "passed": true,
+          "reason": "The message asks for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message is polite, calm, and tells the seller what happened and what to do, but it adds a needless line ('That is the only thing you need to do') and repeats the bank-details problem in two sentences.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "Hello Harbor Street Prints,\n\nYour payout of 10.00 USD did not go through. The bank account details we have on file are probably incorrect. No bank account could be found with those details. The account we tried ends in 1116.\n\nPlease send us new bank account details. That is the only thing you need to do.\n\nThank you,\nThe Marketplace Team"
+    },
+    {
+      "kind": "invalid_currency",
+      "seller": "Larkspur Ceramics",
+      "account_id": "acct_example_004",
+      "payout_id": "po_example_019",
+      "failure_code": "invalid_currency",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['currency'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: invalid_currency'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message states what failed, why, and what to do in plain, polite words, but it opens with a stray 'failure code' line and repeats the bank's wordy reason, which adds a small amount of clutter.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: invalid_currency\nA payout of 10.00 USD to Larkspur Ceramics failed. The bank was unable to process this payout because of its currency. This is probably because the bank account cannot accept payments in that currency.\n\nThe payout went to STRIPE TEST BANK, account ending 4440. The payout ID is po_example_019.\n\nPlease check the currency this bank account accepts, and contact the seller if it needs to change."
+    },
+    {
+      "kind": "insufficient_funds",
+      "seller": "Copper Kettle Coffee",
+      "account_id": "acct_example_005",
+      "payout_id": "po_example_020",
+      "failure_code": "insufficient_funds",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['insufficient funds', 'not enough funds'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: insufficient_funds'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message states what failed, gives the needed IDs, and ends with a clear next step, but it opens with a stray 'failure code' line, repeats the reason in a way that is a bit technical, and leaves the 'decision' vague.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: insufficient_funds\nA payout to Copper Kettle Coffee failed and needs a person to look at it.\n\nPayout: po_example_020\nAmount: 10.00 USD\nSeller account: acct_example_005\nBank account: STRIPE TEST BANK, ending 2227\n\nWhy it failed: The platform's Stripe account has insufficient funds for the payout.\n\nSoftware cannot fix this. Please check the platform's Stripe balance and decide how to handle this payout."
+    },
+    {
+      "kind": "debit_not_authorized",
+      "seller": "Northwind Bike Repair",
+      "account_id": "acct_example_006",
+      "payout_id": "po_example_021",
+      "failure_code": "debit_not_authorized",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['not approved', 'not authorized', 'not authorised'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: debit_not_authorized'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message is clear, calm, and tells the reader what happened and that a person must check the seller's bank account setup, but it opens with a stray 'failure code' line and does not say which setting to change.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: debit_not_authorized\nA payout to Northwind Bike Repair failed. The payout is po_example_021 for 10.00 USD.\n\nThe bank account is at STRIPE TEST BANK and ends in 3335.\n\nThe reason given is: Debit transactions are not approved on the bank account.\n\nSoftware cannot fix this problem. A person needs to look at this seller's bank account setup."
+    },
+    {
+      "kind": "declined",
+      "seller": "Saltmarsh Soap Works",
+      "account_id": "acct_example_007",
+      "payout_id": "po_example_022",
+      "failure_code": "declined",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['not known', 'unknown', 'no reason'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: declined'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message states what failed, gives the IDs, and says to review by hand in plain, calm words, but it opens with a raw 'failure code: declined' line and does not say who should review it or what to check first.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: declined\nA payout of 10.00 USD to Saltmarsh Soap Works failed.\n\nPayout ID: po_example_022\nSeller account: acct_example_007\nDestination: the card ending 5572\n\nThe bank returned the payout. The reason is not known.\n\nSoftware cannot fix this. Please review the payout and the seller's card details by hand."
+    },
+    {
+      "kind": "account_closed",
+      "seller": "Juniper Candle Co.",
+      "account_id": "acct_example_002",
+      "payout_id": "po_example_023",
+      "failure_code": "account_closed",
+      "status": "paid",
+      "retry_payout_id": "po_example_037",
+      "seconds_to_paid": 9.523,
+      "error": null,
+      "draft_kind": "seller_message",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['closed'])."
+        },
+        {
+          "name": "seller_action",
+          "passed": true,
+          "reason": "The message asks for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message is short, polite, and states what happened and what to do, but 'send us new bank account details' gives no how or where, and the sentence 'The bank account has been closed' follows the failure without a clear link.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "Hello Juniper Candle Co.,\n\nYour payout of 10.00 USD to your bank account ending in 1113 failed. The bank account has been closed.\n\nPlease send us new bank account details.\n\nThank you,\nThe Marketplace Team"
+    },
+    {
+      "kind": "no_account",
+      "seller": "Harbor Street Prints",
+      "account_id": "acct_example_003",
+      "payout_id": "po_example_024",
+      "failure_code": "no_account",
+      "status": "paid",
+      "retry_payout_id": "po_example_038",
+      "seconds_to_paid": 8.045,
+      "error": null,
+      "draft_kind": "seller_message",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['incorrect', 'be located', 'not found', 'does not exist', 'no bank account'])."
+        },
+        {
+          "name": "seller_action",
+          "passed": true,
+          "reason": "The message asks for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message is polite, calm, and short, and it states what happened and what to do, but the 'probably incorrect' wording is a little vague and 'send us new bank account details' does not say how or where to send them.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "Hello Harbor Street Prints,\n\nWe tried to send your payout of 10.00 USD to your bank account, but it failed.\n\nHere is why: the bank account details on file are probably incorrect. No bank account could be located with those details.\n\nWhat to do: send us new bank account details.\n\nThank you,\nThe Marketplace Team"
+    },
+    {
+      "kind": "invalid_currency",
+      "seller": "Larkspur Ceramics",
+      "account_id": "acct_example_004",
+      "payout_id": "po_example_025",
+      "failure_code": "invalid_currency",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['currency'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: invalid_currency'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message says what failed, why, and what to do next in plain, calm words, but the opening 'failure code' line is a needless technical header and 'Software cannot fix this' is slightly vague about who acts and what to tell the seller.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: invalid_currency\nA payout of 10.00 USD to Larkspur Ceramics failed. The bank was unable to process this payout because of its currency. This is probably because the bank account cannot accept payments in that currency.\n\nThe payout went to STRIPE TEST BANK, account ending 4440. The payout ID is po_example_025.\n\nSoftware cannot fix this. A person needs to check the seller's bank account and the payout currency."
+    },
+    {
+      "kind": "insufficient_funds",
+      "seller": "Copper Kettle Coffee",
+      "account_id": "acct_example_005",
+      "payout_id": "po_example_026",
+      "failure_code": "insufficient_funds",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['insufficient funds', 'not enough funds'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: insufficient_funds'."
+        }
+      ],
+      "quality": 3,
+      "quality_reasoning": "The message is polite and the closing line says a person must check the balance, but it opens with a raw failure code line and a block of IDs before the point, and the reason uses jargon like 'insufficient funds' without saying plainly what happened or who should act.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: insufficient_funds\nA payout to Copper Kettle Coffee failed.\n\nAmount: 10.00 USD\nPayout ID: po_example_026\nAccount: acct_example_005\nBank account: STRIPE TEST BANK, ending 2227\n\nWhy it failed: The platform's Stripe account has insufficient funds for the payout.\n\nSoftware cannot fix this. A person needs to look at the platform's Stripe balance and decide what to do next."
+    },
+    {
+      "kind": "debit_not_authorized",
+      "seller": "Northwind Bike Repair",
+      "account_id": "acct_example_006",
+      "payout_id": "po_example_027",
+      "failure_code": "debit_not_authorized",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['not approved', 'not authorized', 'not authorised'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: debit_not_authorized'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message says what failed, why, and that a person must review the bank details, in plain and calm words, but it opens with a stray 'failure code' line and doesn't say who that person is or which concrete step to take.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: debit_not_authorized\nA payout of 10.00 USD to Northwind Bike Repair (account acct_example_006) failed. The payout ID is po_example_027.\n\nThe bank account ending 3335 at STRIPE TEST BANK did not accept it. The reason given is: Debit transactions are not approved on the bank account.\n\nSoftware cannot fix this. A person needs to look at the seller's bank account details and decide what to do next."
+    },
+    {
+      "kind": "declined",
+      "seller": "Saltmarsh Soap Works",
+      "account_id": "acct_example_007",
+      "payout_id": "po_example_028",
+      "failure_code": "declined",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['not known', 'unknown', 'no reason'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: declined'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message is clear, calm, and says what happened and what to do next, but it opens with a stray 'failure code: declined' line, repeats the sentence 'the bank name is not given', and does not say who the 'person' is.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: declined\nA payout of 10.00 USD to Saltmarsh Soap Works (account acct_example_007) failed. The payout ID is po_example_028.\n\nThe bank returned the payout. The reason is not known.\n\nThe payout went to the card ending 5572. The bank name is not given.\n\nSoftware cannot fix this. A person must look at the payout and the seller's card details."
+    },
+    {
+      "kind": "account_closed",
+      "seller": "Juniper Candle Co.",
+      "account_id": "acct_example_002",
+      "payout_id": "po_example_029",
+      "failure_code": "account_closed",
+      "status": "paid",
+      "retry_payout_id": "po_example_039",
+      "seconds_to_paid": 9.04,
+      "error": null,
+      "draft_kind": "seller_message",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['closed'])."
+        },
+        {
+          "name": "seller_action",
+          "passed": true,
+          "reason": "The message asks for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        }
+      ],
+      "quality": 5,
+      "quality_reasoning": "The message says plainly that the payout failed because the bank account ending in 1113 is closed, tells the seller to send new bank details, and is short, polite, and calm.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "Hello Juniper Candle Co.,\n\nYour payout of 10.00 USD failed. The reason is that the bank account has been closed. The account that ended in 1113 can no longer receive money.\n\nPlease send us new bank account details.\n\nThank you,\nThe Marketplace Team"
+    },
+    {
+      "kind": "no_account",
+      "seller": "Harbor Street Prints",
+      "account_id": "acct_example_003",
+      "payout_id": "po_example_030",
+      "failure_code": "no_account",
+      "status": "paid",
+      "retry_payout_id": "po_example_040",
+      "seconds_to_paid": 9.306,
+      "error": null,
+      "draft_kind": "seller_message",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['incorrect', 'be located', 'not found', 'does not exist', 'no bank account'])."
+        },
+        {
+          "name": "seller_action",
+          "passed": true,
+          "reason": "The message asks for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message is polite, calm, and short, and it says what happened and what to do, but it repeats the cause in two sentences and the next step is vague about how to send new details.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "Hello Harbor Street Prints,\n\nYour payout of 10.00 USD did not go through. The bank account details we have on file are probably incorrect. No bank account could be located with those details.\n\nPlease send us new bank account details.\n\nThank you,\nThe Marketplace Team"
+    },
+    {
+      "kind": "invalid_currency",
+      "seller": "Larkspur Ceramics",
+      "account_id": "acct_example_004",
+      "payout_id": "po_example_031",
+      "failure_code": "invalid_currency",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['currency'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: invalid_currency'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message is calm, polite and says what failed and what to check, but it opens with a raw failure code line and ends with a vague 'decide what to do next'.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: invalid_currency\nA payout of 10.00 USD to Larkspur Ceramics failed.\n\nThe bank was unable to process this payout because of its currency. This is probably because the bank account cannot accept payments in that currency.\n\nThe payout went to the account at STRIPE TEST BANK that ends in 4440.\n\nSoftware cannot fix this. Please check the bank account details for this seller and decide what to do next."
+    },
+    {
+      "kind": "insufficient_funds",
+      "seller": "Copper Kettle Coffee",
+      "account_id": "acct_example_005",
+      "payout_id": "po_example_032",
+      "failure_code": "insufficient_funds",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['insufficient funds', 'not enough funds'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: insufficient_funds'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message states what failed, why, and that a person must act, in plain calm words, but it opens with a raw 'failure code' line and a list of IDs that add clutter, and it doesn't say who the person should be or what the choices are.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: insufficient_funds\nA payout to Copper Kettle Coffee failed. The amount was 10.00 USD.\n\nPayout ID: po_example_032\nSeller account: acct_example_005\nBank account: STRIPE TEST BANK, ending in 2227\n\nWhy it failed: The platform's Stripe account has insufficient funds for the payout.\n\nSoftware cannot fix this. A person needs to look at the platform's Stripe account and decide what to do with this payout."
+    },
+    {
+      "kind": "debit_not_authorized",
+      "seller": "Northwind Bike Repair",
+      "account_id": "acct_example_006",
+      "payout_id": "po_example_033",
+      "failure_code": "debit_not_authorized",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['not approved', 'not authorized', 'not authorised'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: debit_not_authorized'."
+        }
+      ],
+      "quality": 3,
+      "quality_reasoning": "The message gives the needed facts and a calm tone, but it opens with a raw failure code line, never says who should act or how, and the closing line is vague and a bit curt.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: debit_not_authorized\nA payout of 10.00 USD to Northwind Bike Repair failed. The payout ID is po_example_033.\n\nThe bank account is at STRIPE TEST BANK and ends in 3335.\n\nThe reason: Debit transactions are not approved on the bank account.\n\nSoftware cannot fix this. A person needs to look at it."
+    },
+    {
+      "kind": "declined",
+      "seller": "Saltmarsh Soap Works",
+      "account_id": "acct_example_007",
+      "payout_id": "po_example_034",
+      "failure_code": "declined",
+      "status": "escalated",
+      "retry_payout_id": null,
+      "seconds_to_paid": null,
+      "error": null,
+      "draft_kind": "escalation_note",
+      "accurate": true,
+      "checks": [
+        {
+          "name": "failure_reason",
+          "passed": true,
+          "reason": "The text states the reason (one of: ['not known', 'unknown', 'no reason'])."
+        },
+        {
+          "name": "no_seller_action",
+          "passed": true,
+          "reason": "The note does not ask for new bank details."
+        },
+        {
+          "name": "amount_and_currency",
+          "passed": true,
+          "reason": "The text has the amount 10.00 USD."
+        },
+        {
+          "name": "nothing_invented",
+          "passed": true,
+          "reason": "No date, promise or number that is not in the input."
+        },
+        {
+          "name": "raw_failure_code_on_line_one",
+          "passed": true,
+          "reason": "Line one is 'failure code: declined'."
+        }
+      ],
+      "quality": 4,
+      "quality_reasoning": "The message says plainly what happened and what to do next in calm, polite words, but the opening 'failure code: declined' line is a needless raw label and the bank-name sentence adds little.",
+      "judge_failed": false,
+      "model": "claude-cli:claude-sonnet-5-5",
+      "draft_error": null,
+      "text": "failure code: declined\nThe $10.00 USD payout to Saltmarsh Soap Works was returned by the bank. The reason is not known.\n\nThe payout went to the card ending in 5572. The bank name is not on file.\n\nA person must check this payout. Please look at the card details for this seller and contact the seller if needed."
+    }
+  ],
+  "_provenance": "Recorded sandbox data from 2026-10-11. Resource identifiers replaced with examples; recorded messages and measured results otherwise preserved."
+}

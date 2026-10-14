@@ -1,0 +1,96 @@
+[
+  {
+    "account": "acct_example_001",
+    "api_version": "2026-09-30.endive",
+    "context": "acct_example_001",
+    "created": 1791750486,
+    "data": {
+      "object": {
+        "amount": 1000,
+        "application_fee": null,
+        "application_fee_amount": null,
+        "arrival_date": 1791849600,
+        "automatic": false,
+        "balance_transaction": "txn_example_042",
+        "created": 1791750486,
+        "currency": "usd",
+        "description": null,
+        "destination": "ba_example_008",
+        "failure_balance_transaction": "txn_example_043",
+        "failure_code": "account_closed",
+        "failure_message": "The bank account has been closed.",
+        "id": "po_example_013",
+        "livemode": false,
+        "metadata": {
+          "payout_rescue_test": "2026-10-11"
+        },
+        "method": "standard",
+        "object": "payout",
+        "original_payout": null,
+        "payout_method": null,
+        "reconciliation_status": "not_applicable",
+        "reversed_by": null,
+        "source_type": "card",
+        "statement_descriptor": null,
+        "status": "failed",
+        "trace_id": {
+          "status": "unsupported",
+          "value": null
+        },
+        "type": "bank_account"
+      }
+    },
+    "id": "evt_example_012",
+    "livemode": false,
+    "object": "event",
+    "pending_webhooks": 2,
+    "type": "payout.paid"
+  },
+  {
+    "account": "acct_example_001",
+    "api_version": "2026-09-30.endive",
+    "context": "acct_example_001",
+    "created": 1791750487,
+    "data": {
+      "object": {
+        "amount": 1000,
+        "application_fee": null,
+        "application_fee_amount": null,
+        "arrival_date": 1791849600,
+        "automatic": false,
+        "balance_transaction": "txn_example_042",
+        "created": 1791750486,
+        "currency": "usd",
+        "description": null,
+        "destination": "ba_example_008",
+        "failure_balance_transaction": "txn_example_043",
+        "failure_code": "account_closed",
+        "failure_message": "The bank account has been closed.",
+        "id": "po_example_013",
+        "livemode": false,
+        "metadata": {
+          "payout_rescue_test": "2026-10-11"
+        },
+        "method": "standard",
+        "object": "payout",
+        "original_payout": null,
+        "payout_method": null,
+        "reconciliation_status": "not_applicable",
+        "reversed_by": null,
+        "source_type": "card",
+        "statement_descriptor": null,
+        "status": "failed",
+        "trace_id": {
+          "status": "unsupported",
+          "value": null
+        },
+        "type": "bank_account"
+      }
+    },
+    "id": "evt_example_011",
+    "livemode": false,
+    "object": "event",
+    "pending_webhooks": 2,
+    "type": "payout.failed"
+  }
+]

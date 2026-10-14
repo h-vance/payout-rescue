@@ -1,0 +1,105 @@
+{
+  "rescue": {
+    "failed_payout": {
+      "payout_id": "po_example_014",
+      "run_id": "live",
+      "account_id": "acct_example_001",
+      "external_account_id": "ba_example_009",
+      "failure_code": "account_closed",
+      "amount": 1000,
+      "currency": "usd",
+      "status": "paid",
+      "seller_message": "Hello Spike Seller,\n\nYour payout of 10.00 USD did not go through. The reason: the bank account has been closed.\n\nThe payout was going to the account ending in 1113 at STRIPE TEST BANK.\n\nWhat to do: send us new bank account details.\n\nThank you.",
+      "escalation_note": null,
+      "retry_payout_id": "po_example_015",
+      "created_at": "2026-10-11T20:38:54.439Z",
+      "updated_at": "2026-10-11T20:39:07.268Z"
+    },
+    "model_draft_step": {
+      "id": 2,
+      "payout_id": "po_example_014",
+      "run_id": "live",
+      "type": "model_draft",
+      "inputs": {
+        "draft": "seller_message",
+        "payout": {
+          "id": "po_example_014",
+          "amount": "10.00 USD",
+          "failure_code": "account_closed",
+          "failure_reason": "The bank account has been closed."
+        },
+        "connected_account": {
+          "id": "acct_example_001",
+          "name": "Spike Seller"
+        },
+        "external_account": {
+          "id": "ba_example_009",
+          "bank_name": "STRIPE TEST BANK",
+          "last4": "1113"
+        }
+      },
+      "outputs": {
+        "text": "Hello Spike Seller,\n\nYour payout of 10.00 USD did not go through. The reason: the bank account has been closed.\n\nThe payout was going to the account ending in 1113 at STRIPE TEST BANK.\n\nWhat to do: send us new bank account details.\n\nThank you.",
+        "cost_is_estimate": true
+      },
+      "model": "claude-cli:claude-sonnet-5-5",
+      "input_tokens": 7158,
+      "output_tokens": 329,
+      "cost_usd": 0.032240000000000005,
+      "actor": null,
+      "created_at": "2026-10-11T20:39:04.449Z"
+    }
+  },
+  "escalation": {
+    "failed_payout": {
+      "payout_id": "po_example_016",
+      "run_id": "live",
+      "account_id": "acct_example_001",
+      "external_account_id": "ba_example_010",
+      "failure_code": "invalid_currency",
+      "amount": 1000,
+      "currency": "usd",
+      "status": "escalated",
+      "seller_message": null,
+      "escalation_note": "failure code: invalid_currency\nA payout of 10.00 USD to Spike Seller (acct_example_001) failed. The payout is po_example_016. It went to external account ba_example_010 at STRIPE TEST BANK, ending 4440.\n\nThe bank was unable to process this payout because of its currency. This is probably because the bank account cannot accept payments in that currency.\n\nSoftware cannot fix this. A person needs to review the payout and the bank account details.",
+      "retry_payout_id": null,
+      "created_at": "2026-10-11T20:39:12.552Z",
+      "updated_at": "2026-10-11T20:39:25.587Z"
+    },
+    "model_draft_step": {
+      "id": 7,
+      "payout_id": "po_example_016",
+      "run_id": "live",
+      "type": "model_draft",
+      "inputs": {
+        "draft": "escalation_note",
+        "payout": {
+          "id": "po_example_016",
+          "amount": "10.00 USD",
+          "failure_code": "invalid_currency",
+          "failure_reason": "The bank was unable to process this payout because of its currency. This is probably because the bank account cannot accept payments in that currency."
+        },
+        "connected_account": {
+          "id": "acct_example_001",
+          "name": "Spike Seller"
+        },
+        "external_account": {
+          "id": "ba_example_010",
+          "bank_name": "STRIPE TEST BANK",
+          "last4": "4440"
+        }
+      },
+      "outputs": {
+        "text": "A payout of 10.00 USD to Spike Seller (acct_example_001) failed. The payout is po_example_016. It went to external account ba_example_010 at STRIPE TEST BANK, ending 4440.\n\nThe bank was unable to process this payout because of its currency. This is probably because the bank account cannot accept payments in that currency.\n\nSoftware cannot fix this. A person needs to review the payout and the bank account details.",
+        "cost_is_estimate": true
+      },
+      "model": "claude-cli:claude-sonnet-5-5",
+      "input_tokens": 7219,
+      "output_tokens": 770,
+      "cost_usd": 0.0367877,
+      "actor": null,
+      "created_at": "2026-10-11T20:39:25.587Z"
+    }
+  },
+  "_provenance": "Recorded sandbox data from 2026-10-11. Resource identifiers replaced with examples; recorded messages and measured results otherwise preserved."
+}

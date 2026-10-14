@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payout Rescue</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/app.css') }}">
+</head>
+<body>
+  <main>
+    <header class="page-header">
+      <div>
+        <h1>Payout Rescue</h1>
+        <p>Failed seller payouts, handled in minutes.</p>
+      </div>
+      <span class="sandbox-pill">Stripe sandbox · payout-rescue</span>
+    </header>
+    <section class="eval-results" aria-labelledby="eval-heading">
+      <h2 id="eval-heading">Eval results</h2>
+      {% if eval %}
+      <div class="scores">
+        <div>
+          <h3>Message accuracy</h3>
+          <p class="score">{{ eval.accuracy }}</p>
+          <p>{{ eval.accurate_cases }} of {{ eval.cases }} drafted messages passed every accuracy check.</p>
+        </div>
+        <div>
+          <h3>Message quality</h3>
+          <p class="score">{{ eval.quality }} <span>of 5</span></p>
+          <p>The mean rating by a judge model.</p>
+          {% if eval.judge_note %}<p>{{ eval.judge_note }}</p>{% endif %}
+        </div>
+      </div>
+      <h3>Success criteria</h3>
+      <ol class="criteria">
+        {% for criterion in eval.criteria %}
+        <li>
+          <div>{{ criterion.text }} <strong>{{ criterion.result }}</strong></div>
+          <span class="criterion-badge" data-result="{{ criterion.result.partition(':')[0] }}" aria-hidden="true">{{ criterion.result.partition(':')[0] }}</span>
+        </li>
+        {% endfor %}
+      </ol>
+      <table class="failure-code-table">
+        <caption>Scores for each failure code</caption>
+        <thead>
+          <tr>
+            <th scope="col">Failure code</th>
+            <th scope="col">Cases</th>
+            <th scope="col">Message accuracy</th>
+            <th scope="col">Message quality</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in eval.failure_codes %}
+          <tr>
+            <th scope="row">{{ row.failure_code }}</th>
+            <td>{{ row.cases }}</td>
+            <td>{{ row.accuracy }}</td>
+            <td>{{ row.quality }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <dl class="run-facts" aria-label="The eval run">
+        {% for fact in eval.facts %}
+        <div><dt>{{ fact.partition(':')[0] }}:</dt><dd>{{ fact.partition(':')[2].strip() }}</dd></div>
+        {% endfor %}
+      </dl>
+      {% else %}
+      <p>No eval run yet. Run <code>./scripts/eval.sh</code> to make one.</p>
+      {% endif %}
+      <aside class="assumptions" aria-labelledby="assumptions-heading">
+        <h3 id="assumptions-heading">Illustrative assumptions, not customer data</h3>
+        <ul>
+          {% for assumption in assumptions %}
+          <li>{{ assumption }}</li>
+          {% endfor %}
+        </ul>
+      </aside>
+    </section>
+    <h2>Failed payouts</h2>
+    {% if not failed_payouts %}
+    <p class="empty-state">No failed payouts yet.</p>
+    {% endif %}
+    {% for failed_payout in failed_payouts %}
+    {% set heading_id = "failed-payout-" ~ loop.index %}
+    {% set action_url = "/failed-payouts/" ~ (failed_payout.payout_id | urlencode) %}
+    <article class="payout-card" aria-labelledby="{{ heading_id }}">
+      <header class="payout-header">
+        <div>
+          <h3 id="{{ heading_id }}">Failed payout {{ failed_payout.payout_id }}</h3>
+          <p>{{ failed_payout.account_id }}</p>
+        </div>
+        <dl class="payout-status" data-status="{{ failed_payout.status }}">
+          <dt class="visually-hidden">Status</dt>
+          <dd>{{ failed_payout.status_label }}</dd>
+        </dl>
+      </header>
+      <dl class="payout-facts">
+        <div class="payout-amount"><dt>Amount</dt><dd>{{ failed_payout.amount_display }}</dd></div>
+        <div><dt>Failure code</dt><dd><code>{{ failed_payout.failure_code or "none given" }}</code></dd></div>
+        <div><dt>Connected account</dt><dd>{{ failed_payout.account_id }}</dd></div>
+        {% if failed_payout.retry_payout_id %}
+        <div><dt>Retry</dt><dd>{{ failed_payout.retry_payout_id }}</dd></div>
+        {% endif %}
+      </dl>
+      {% for title, text in [("Seller message", failed_payout.seller_message), ("Escalation note", failed_payout.escalation_note)] %}
+      {% if text %}
+      <section class="letter-panel">
+        <h4>{{ title }}</h4>
+        {% for line in text.splitlines() if line.strip() %}
+        <p>{% if title == "Escalation note" and loop.first %}<code>{{ line }}</code>{% else %}{{ line }}{% endif %}</p>
+        {% endfor %}
+      </section>
+      {% endif %}
+      {% endfor %}
+      {% if failed_payout.draft_failed %}
+      <p>The draft failed. There is no seller message.</p>
+      {% endif %}
+      {% if failed_payout.can_retry_draft %}
+      <form method="post" action="{{ action_url }}/draft">
+        <button type="submit" aria-describedby="{{ heading_id }}">Retry draft</button>
+      </form>
+      {% endif %}
+      {% if failed_payout.action == "seller_fix" %}
+      <form method="post" action="{{ action_url }}/seller-fix">
+        <button type="submit" aria-describedby="{{ heading_id }}">Seller sent new bank details</button>
+      </form>
+      {% endif %}
+      {% if failed_payout.action == "approval" %}
+      <form class="approval-action" method="post" action="{{ action_url }}/approval">
+        <button type="submit" aria-describedby="{{ heading_id }}">Approve retry</button>
+      </form>
+      {% endif %}
+      {% if failed_payout.error %}
+      <p class="action-error" role="alert">Stripe did not accept this action. Try again. {{ failed_payout.error }}</p>
+      {% endif %}
+      <div class="trace-scroll" role="region" aria-label="Trace of failed payout {{ failed_payout.payout_id }}" tabindex="0">
+      <table class="trace-table">
+        <caption>Trace of failed payout {{ failed_payout.payout_id }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Time (UTC)</th>
+            <th scope="col">Step</th>
+            <th scope="col">By</th>
+            <th scope="col">Inputs</th>
+            <th scope="col">Outputs</th>
+            <th scope="col">Model</th>
+            <th scope="col">Tokens</th>
+            <th scope="col">Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for step in failed_payout.trace %}
+          <tr>
+            <td data-step="{{ step.type }}"{% if step.type == "retry" and '"status": "failed"' in step.outputs %} data-outcome="failed"{% endif %}><time datetime="{{ step.time }}">{{ step.time[:10] }}<wbr>{{ step.time[10:] }}</time></td>
+            <th scope="row">{{ step.type }}</th>
+            <td>{{ step.actor }}</td>
+            <td>{{ step.inputs }}</td>
+            <td>{{ step.outputs }}</td>
+            <td>{{ step.model }}</td>
+            <td>{{ step.tokens }}</td>
+            <td>{{ step.cost }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </article>
+    {% endfor %}
+    {% if failed_payouts %}
+    <footer class="page-footer">
+    <p>A cost marked "estimate" is the model provider's own estimate. Any other cost is the tokens multiplied by the two prices in the config, which were set on {{ prices_set_on }}.</p>
+    </footer>
+    {% endif %}
+  </main>
+</body>
+</html>
